@@ -132,3 +132,4 @@ Cloud uploads use multipart form fields coverImage (horse/news), images (extra h
 5. Review Arabic translations, add a password-recovery process if needed, and decide whether you need contact forms, booking, sales, or other business features.
 
 Local demo storage is intended for a single running process. Do not expose it publicly or use it as a production database.
+
