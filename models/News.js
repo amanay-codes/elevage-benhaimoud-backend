@@ -77,7 +77,7 @@ const newsSchema = new mongoose.Schema(
 
 // ─── Auto-generate slug ────────────────────────────────────────────────────────
 newsSchema.pre("save", function (next) {
-  if (this.isModified("title")) {
+  if (!this.slug) {
     this.slug = slugify(this.title, { lower: true, strict: true });
   }
   // Set publishedAt when first published

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Discover Élevage Benhaimoud: our horses, their pedigrees, and stories from our breeding journey."
+    />
+    <meta name="theme-color" content="#183c32" />
+    <title>Élevage Benhaimoud — A legacy in motion</title>
+    <link rel="icon" href="/assets/mark.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <div id="preview" class="preview" hidden>
+      LOCAL PREVIEW
+      <span
+        >Sample horses, stories & photographs · Changes are saved on this
+        computer</span
+      >
+    </div>
+    <header class="header">
+      <a href="#/" class="brand" aria-label="Élevage Benhaimoud home"
+        ><img src="/assets/mark.svg" alt="" width="46" height="46" /><span
+          >BENHAIMOUD<small>É L E V A G E</small></span
+        ></a
+      >
+      <button
+        class="menu-toggle"
+        aria-expanded="false"
+        aria-controls="navigation"
+      >
+        Menu ☰
+      </button>
+      <nav id="navigation" aria-label="Main navigation">
+        <a href="#/" data-nav="home">Home</a
+        ><a href="#/horses" data-nav="horses">Our horses</a
+        ><a href="#/stallions" data-nav="stallions">Stallions</a
+        ><a href="#/journal" data-nav="journal">Journal</a
+        ><a href="#/gallery" data-nav="gallery">Gallery</a
+        ><a href="#/about" data-nav="about">Our story</a>
+      </nav>
+      <div class="header-actions">
+        <button id="language" aria-label="Switch language">العربية</button
+        ><a class="small-button" href="#/admin">Dashboard ↗</a>
+      </div>
+    </header>
+    <main id="main" tabindex="-1">
+      <div class="loading">Preparing your visit…</div>
+    </main>
+    <footer>
+      <div class="footer-top">
+        <a class="brand" href="#/"
+          >BENHAIMOUD<small>ÉLEVAGE · MOROCCO</small></a
+        >
+        <p>A shared passion.<br />A story that continues.</p>
+        <a href="#/horses">Discover our horses ↗</a>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> Élevage Benhaimoud</span
+        ><span>Care. Character. Connection.</span
+        ><a href="#/admin">Admin access</a>
+      </div>
+    </footer>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
