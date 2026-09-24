@@ -11,9 +11,23 @@ const {
 } = require("../controllers/newsController");
 const { protect } = require("../middleware/auth");
 const { uploadNewsImage } = require("../config/cloudinary");
+const News = require("../models/News");
 
 // ── Public routes ──────────────────────────────────────────────────────────────
 router.get("/", getAllNews);
+router.get("/admin/:id", protect, async (req, res, next) => {
+  if (req.params.id === "all") return getAllNewsAdmin(req, res, next);
+  try {
+    const item = await News.findById(req.params.id);
+    if (!item)
+      return res
+        .status(404)
+        .json({ success: false, message: "Article not found." });
+    res.json({ success: true, data: item });
+  } catch (error) {
+    next(error);
+  }
+});
 router.get("/:slug", getNewsBySlug);
 
 // ── Admin-only routes ──────────────────────────────────────────────────────────

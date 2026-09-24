@@ -36,6 +36,17 @@ const protect = async (req, res, next) => {
 
     // 4. Attach user to request object for use in controllers
     req.user = user;
+    if (
+      user.passwordChangedAt &&
+      decoded.pwdv !== user.passwordChangedAt.getTime()
+    ) {
+      return res
+        .status(401)
+        .json({
+          success: false,
+          message: "Password changed. Please log in again.",
+        });
+    }
     next();
   } catch (error) {
     return res.status(401).json({

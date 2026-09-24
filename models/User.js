@@ -32,6 +32,7 @@ const userSchema = new mongoose.Schema(
     avatar: {
       type: String,
     },
+    passwordChangedAt: { type: Date },
   },
   {
     timestamps: true,

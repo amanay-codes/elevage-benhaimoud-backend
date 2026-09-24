@@ -134,7 +134,7 @@ const horseSchema = new mongoose.Schema(
 
 // ─── Auto-generate slug from name before saving ────────────────────────────────
 horseSchema.pre("save", function (next) {
-  if (this.isModified("name")) {
+  if (!this.slug) {
     this.slug = slugify(this.name, { lower: true, strict: true });
   }
   next();

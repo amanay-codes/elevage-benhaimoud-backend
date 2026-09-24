@@ -35,7 +35,6 @@ const seedAdmin = async () => {
 
   console.log(`✅ Admin account created successfully!`);
   console.log(`   Email:    ${email}`);
-  console.log(`   Password: ${password}`);
   console.log(`\n⚠️  Change your password after first login!`);
 
   process.exit(0);

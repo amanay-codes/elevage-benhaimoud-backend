@@ -1,292 +1,134 @@
-# 🐴 Élevage Benhaimoud — Backend API
+# Elevage Benhaimoud ? Website & Admin Dashboard
 
-A Node.js + Express + MongoDB REST API for the Élevage Benhaimoud horse breeding website, with Cloudinary for media storage.
+A horse breeding website with a public catalogue, pedigrees, journal, photo/video gallery, and an administrator dashboard. The responsive frontend is served by the same server as the API; no separate frontend build is needed.
 
-## Project status
+![Local website preview](docs/website-preview.png)
 
-**In development — backend implementation only.** This repository contains the API; the public website and admin dashboard have not yet been built here. Database connectivity, media uploads, and complete user workflows still need verification before deployment.
+## See it running in one command
 
-### Implemented
+Requires Node.js 22 or later. In this repository folder:
 
-- Admin login with hashed passwords and JWT authentication.
-- Horse profiles with pedigree, achievements, breeding availability, and images.
-- News articles with draft and published states.
-- Photo and video gallery management through Cloudinary.
-- Arabic content fields alongside primary content.
-
-### Next milestones
-
-1. Configure MongoDB, Cloudinary, and environment variables; verify the API workflows.
-2. Complete draft retrieval for admin editing, publication-date handling on updates, and media cleanup.
-3. Strengthen request validation, pagination limits, upload limits, and login protection.
-4. Build the public website and admin dashboard.
-5. Add automated tests and prepare deployment, backups, and monitoring.
-
-Only placeholder configuration is included in `.env.example`. Real credentials belong in an untracked `.env` file. Installed dependencies are excluded; install them using `npm ci`.
-
----
-
-## 📁 Project Structure
-
-```
-elevage-benhaimoud-backend/
-├── server.js                   ← Main entry point (start here)
-├── package.json
-├── .env.example                ← Copy to .env and fill in your values
-├── .gitignore
-│
-├── config/
-│   ├── db.js                   ← MongoDB connection
-│   └── cloudinary.js           ← Image/video upload config
-│
-├── models/
-│   ├── Horse.js                ← Horse schema (pedigree, images, etc.)
-│   ├── News.js                 ← News/blog post schema
-│   ├── Gallery.js              ← Photo & video gallery schema
-│   └── User.js                 ← Admin user schema
-│
-├── controllers/
-│   ├── authController.js       ← Login, get current user
-│   ├── horseController.js      ← Full CRUD for horses
-│   ├── newsController.js       ← Full CRUD for news
-│   └── galleryController.js    ← Upload & manage media
-│
-├── routes/
-│   ├── authRoutes.js
-│   ├── horseRoutes.js
-│   ├── newsRoutes.js
-│   └── galleryRoutes.js
-│
-├── middleware/
-│   ├── auth.js                 ← JWT verification (protects admin routes)
-│   └── errorHandler.js         ← Global error handler
-│
-└── utils/
-    └── seedAdmin.js            ← Run once to create your admin account
+```sh
+npm run demo
 ```
 
----
+Open **http://localhost:5000**. The local demo uses only Node's built-in modules, so it does not require npm install, MongoDB, Cloudinary, or any credentials.
 
-## 🚀 Step-by-Step Setup Guide
+- Dashboard: **http://localhost:5000/#/admin**
+- First-run email: **admin@demo.local**
+- First-run password: **Benhaimoud2026!**
+- Change the password from the dashboard if desired.
+- Stop with Ctrl+C; run the same command to restart.
+- Data and password changes persist in **.local/demo.json**, which is excluded from Git.
+- Optional first-run overrides: DEMO_EMAIL and DEMO_PASSWORD. Set PORT to use another port.
 
-Follow these steps in order. Do not skip any step.
+The demo binds to 127.0.0.1 and is **for local preview only**. It includes fictional/sample horses, pedigrees, articles, and stock photographs. It supports photo uploads up to 5 MB. Cloudinary video uploads are available in cloud mode. Demo data is separate from MongoDB and is not automatically migrated.
 
-### Step 1 — Install Node.js
+To reset the demo, stop its server, back up .local/demo.json, then remove that single file. Restart to restore the sample records and first-run credentials. Do not remove it if you want to keep your changes.
 
-Download and install Node.js from https://nodejs.org (choose the LTS version).
+## What you can use
 
-Verify it installed correctly:
-```bash
-node --version    # Should show v18.x.x or higher
-npm --version     # Should show 9.x.x or higher
+- Homepage with featured horses, farm introduction, and recent articles.
+- Horse and stallion catalogues with search, filters, and pagination.
+- Horse detail pages with photographs, pedigree, and achievements when present.
+- Journal with article pages; drafts stay private until published.
+- Photo gallery with lightbox and cloud-mode video playback.
+- English/Arabic public navigation, content fields, and right-to-left layout. Missing Arabic content falls back to the primary text. Admin controls and some metadata labels are currently English.
+- Admin login, horse/pedigree editing, article draft/publish workflow, and gallery management.
+- Admin password changes; changing a password invalidates existing sessions/tokens.
+- Responsive mobile navigation, keyboard focus states, form errors, and loading/empty states.
+
+## Run with MongoDB and Cloudinary
+
+```sh
+npm ci
 ```
 
-### Step 2 — Get the project files
+Copy .env.example to .env and replace the placeholders. On PowerShell:
 
-Put the project folder somewhere on your computer (e.g. `Desktop/elevage-benhaimoud-backend`).
-
-Then open a terminal in that folder and install dependencies:
-```bash
-npm install
+```powershell
+Copy-Item .env.example .env
 ```
 
-This installs Express, Mongoose, Cloudinary, and everything else listed in `package.json`.
+Configure MONGODB_URI, a random JWT_SECRET of at least 32 characters, CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, ADMIN_EMAIL, and ADMIN_PASSWORD. Never commit real credentials.
 
----
-
-### Step 3 — Set up MongoDB Atlas (free cloud database)
-
-1. Go to https://cloud.mongodb.com and create a free account
-2. Click **"Build a Database"** → choose **Free (M0)** → pick a region close to you
-3. Create a username and password (save them!)
-4. In **Network Access**, click **"Add IP Address"** → choose **"Allow Access from Anywhere"** (for now)
-5. In **Database**, click **"Connect"** → **"Connect your application"**
-6. Copy the connection string — it looks like:
-   ```
-   mongodb+srv://youruser:yourpassword@cluster0.xxxxx.mongodb.net/
-   ```
-7. Replace `<password>` with your actual password and add your database name:
-   ```
-   mongodb+srv://youruser:yourpassword@cluster0.xxxxx.mongodb.net/elevage-benhaimoud
-   ```
-
----
-
-### Step 4 — Set up Cloudinary (free image/video storage)
-
-1. Go to https://cloudinary.com and create a free account
-2. On your **Dashboard**, you'll see:
-   - Cloud Name
-   - API Key
-   - API Secret
-3. Copy all three — you'll need them in the next step.
-
----
-
-### Step 5 — Create your .env file
-
-Copy the example file:
-```bash
-cp .env.example .env
-```
-
-Then open `.env` in VS Code and fill in your real values:
-
-```env
-PORT=5000
-NODE_ENV=development
-
-MONGODB_URI=mongodb+srv://youruser:yourpassword@cluster0.xxxxx.mongodb.net/elevage-benhaimoud
-
-JWT_SECRET=write_something_very_long_and_random_here_like_50_characters
-JWT_EXPIRES_IN=7d
-
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-
-ADMIN_EMAIL=admin@elevage-benhaimoud.ma
-ADMIN_PASSWORD=ChooseAStrongPassword123!
-```
-
-⚠️ **Never share your .env file or commit it to GitHub!** It contains secrets.
-
----
-
-### Step 6 — Create your admin account
-
-Run this command once (and only once):
-```bash
+```sh
 node utils/seedAdmin.js
+npm start
 ```
 
-You should see:
-```
-✅ MongoDB connected: cluster0.xxxxx.mongodb.net
-✅ Admin account created successfully!
-   Email:    admin@elevage-benhaimoud.ma
-   Password: ChooseAStrongPassword123!
-```
+Open http://localhost:5000. The server waits for the database connection before listening. The production database starts empty; add your real horses and articles in the dashboard. Stop the demo first if it is using port 5000.
 
----
+Use FRONTEND_ORIGINS (comma-separated origins) only if serving the frontend from a different origin. Default: http://localhost:5000. Serve the deployed app over HTTPS.
 
-### Step 7 — Start the server
+## Checks
 
-```bash
-npm run dev
+```sh
+npm test
+npm run test:browser
 ```
 
-You should see:
-```
-✅ MongoDB connected: cluster0.xxxxx.mongodb.net
-🚀 Server running on http://localhost:5000
-```
+API tests use a temporary local database and check authentication, validation, CRUD, draft visibility, publication, persistence, and password rotation. Browser tests use a separate temporary database and check public pages, search, admin editing, uploads, gallery viewing, mobile navigation, and Arabic layout.
 
----
+Windows browser tests use installed Microsoft Edge. Elsewhere, first run npx playwright install chromium. BROWSER_PATH can override the browser executable. Screenshots go to test-results/ and are not committed. GitHub Actions runs both suites on pushes and pull requests.
 
-## 🧪 Testing Your API with Postman
+MongoDB and Cloudinary integration still require verification against your configured services; local demo tests do not prove those external services work.
 
-Download Postman from https://www.postman.com/downloads/
+## Structure
 
-### Test 1: Health check
-- Method: `GET`
-- URL: `http://localhost:5000/api/health`
-- Expected: `{ "success": true, "message": "🐴 Élevage Benhaimoud API is running" }`
+| Path | Purpose |
+| --- | --- |
+| public/ | Website, dashboard, styles, and preview photographs |
+| demo/ | Dependency-free local preview server and sample data |
+| server.js | Express app serving the frontend and cloud-backed API |
+| models/, routes/, controllers/ | MongoDB schemas and API behaviour |
+| middleware/, utils/, config/ | Authentication, validation, uploads, setup |
+| tests/ | API and browser checks |
+| .github/workflows/test.yml | Continuous integration |
+| Dockerfile | Cloud-mode deployment image |
 
-### Test 2: Admin login
-- Method: `POST`
-- URL: `http://localhost:5000/api/auth/login`
-- Body (JSON):
-  ```json
-  {
-    "email": "admin@elevage-benhaimoud.ma",
-    "password": "ChooseAStrongPassword123!"
-  }
-  ```
-- Expected: `{ "success": true, "token": "eyJ...", "user": { ... } }`
+## API overview
 
-### Test 3: Create a horse (admin only)
-- Method: `POST`
-- URL: `http://localhost:5000/api/horses`
-- Headers: `Authorization: Bearer <paste your token here>`
-- Body (form-data):
-  - `name`: `Atlas Benhaimoud`
-  - `nameAr`: `أطلس بن حيمود`
-  - `sex`: `stallion`
-  - `breed`: `Arabian`
-  - `breedAr`: `عربي أصيل`
-  - `isStallion`: `true`
-  - `isFeatured`: `true`
-  - `description`: `A magnificent Arabian stallion...`
-  - `coverImage`: (attach an image file)
+| Route | Access | Purpose |
+| --- | --- | --- |
+| GET /api/health | Public | Server status and mode |
+| POST /api/auth/login | Public, rate limited | Admin sign in |
+| GET /api/auth/me | Admin | Current administrator |
+| PUT /api/auth/password | Admin | Change password |
+| POST /api/auth/logout | Admin | Sign out |
+| GET /api/horses | Public | Search/filter/paginate horses |
+| GET /api/horses/:slug | Public | Full horse profile |
+| GET /api/horses/admin/:id | Admin | Horse editor data |
+| POST, PUT, DELETE /api/horses[/:id] | Admin | Manage horses |
+| POST /api/horses/:id/images | Admin, cloud mode | Extra horse photos |
+| GET /api/news | Public | Published articles |
+| GET /api/news/:slug | Public | Published article |
+| GET /api/news/admin/all | Admin | Paginated articles including drafts |
+| GET /api/news/admin/:id | Admin | Full article including draft text |
+| POST, PUT, DELETE /api/news[/:id] | Admin | Manage articles |
+| GET /api/gallery | Public | Gallery listing |
+| GET /api/gallery/admin/:id | Admin | Gallery editor data |
+| POST, PUT, DELETE /api/gallery[/:id] | Admin | Manage gallery |
 
-### Test 4: Get all horses (public)
-- Method: `GET`
-- URL: `http://localhost:5000/api/horses`
-- No token needed
+Cloud uploads use multipart form fields coverImage (horse/news), images (extra horse photos), or media (gallery). Demo writes use JSON with image URLs or base64 photos. Admin authentication uses an Authorization: Bearer token header. Browser tokens are kept in sessionStorage, not permanent localStorage. Cloud logout clears the browser token; token revocation occurs on password change or expiry.
 
-### Test 5: Filter horses
-- URL: `http://localhost:5000/api/horses?sex=stallion&breed=Arabian`
-- URL: `http://localhost:5000/api/horses?isFeatured=true`
+## Improvements to the original backend
 
----
+- Full draft retrieval for editing and publication timestamps when publishing updates.
+- Stable slugs when names/titles change, preserving existing links.
+- Explicit allowed update fields and safe literal search filters.
+- Validated pagination and sort values; login attempt limits.
+- Upload type/size limits, replaced-cover cleanup, failed-upload cleanup, and missing-horse checks.
+- Password change flow and removal of password logging during admin setup.
+- Clear configuration errors and database connection before startup.
+- Updated upload dependencies and patched transitive dependencies; `npm audit` reported zero vulnerabilities at verification time. The `qs` override keeps Express's parser on the patched release.
 
-## 📡 Complete API Reference
+## Before a real launch
 
-### Auth
-| Method | URL | Auth | Description |
-|--------|-----|------|-------------|
-| POST | `/api/auth/login` | ❌ | Admin login |
-| GET | `/api/auth/me` | ✅ | Get current admin |
+1. Replace sample imagery and homepage/about copy with your real farm history, photographs, and contact details. See public/assets/CREDITS.md for stock-image sources.
+2. Configure MongoDB and Cloudinary and test real login, edits, uploads, deletion, and video playback.
+3. Deploy the Docker image or Node app with environment variables; connect your domain and HTTPS. The repository branch is source code, not a hosted website.
+4. Enable database backups and error monitoring. Test restoring a backup. Cloud media cleanup failures are logged; orphan cleanup and distributed rate limiting are future operational improvements.
+5. Review Arabic translations, add a password-recovery process if needed, and decide whether you need contact forms, booking, sales, or other business features.
 
-### Horses
-| Method | URL | Auth | Description |
-|--------|-----|------|-------------|
-| GET | `/api/horses` | ❌ | List all horses (filterable) |
-| GET | `/api/horses/:slug` | ❌ | Get horse details |
-| POST | `/api/horses` | ✅ | Create horse |
-| PUT | `/api/horses/:id` | ✅ | Update horse |
-| DELETE | `/api/horses/:id` | ✅ | Delete horse |
-| POST | `/api/horses/:id/images` | ✅ | Add images to horse |
-
-### News
-| Method | URL | Auth | Description |
-|--------|-----|------|-------------|
-| GET | `/api/news` | ❌ | List published articles |
-| GET | `/api/news/:slug` | ❌ | Get article |
-| GET | `/api/news/admin/all` | ✅ | All articles incl. drafts |
-| POST | `/api/news` | ✅ | Create article |
-| PUT | `/api/news/:id` | ✅ | Update article |
-| DELETE | `/api/news/:id` | ✅ | Delete article |
-
-### Gallery
-| Method | URL | Auth | Description |
-|--------|-----|------|-------------|
-| GET | `/api/gallery` | ❌ | List gallery items |
-| POST | `/api/gallery` | ✅ | Upload photos/videos |
-| PUT | `/api/gallery/:id` | ✅ | Update item metadata |
-| DELETE | `/api/gallery/:id` | ✅ | Delete item |
-
----
-
-## 🌍 Deploying to Production (Railway)
-
-1. Push your code to GitHub (without `.env`!)
-2. Go to https://railway.app and sign in with GitHub
-3. Click **"New Project"** → **"Deploy from GitHub repo"**
-4. Select your backend repository
-5. In **Variables**, add all your `.env` variables
-6. Railway gives you a URL like `https://elevage-benhaimoud-backend.up.railway.app`
-7. Use that URL in your React frontend instead of `localhost:5000`
-
----
-
-## ✅ What's next — Phase 2
-
-Once your backend is running, the next step is building the **Admin Dashboard** in React where you can:
-- Log in securely
-- Add/edit/delete horses with photos and pedigree
-- Write and publish news articles
-- Upload gallery photos and videos
-
-All without touching code — just a beautiful admin interface.
+Local demo storage is intended for a single running process. Do not expose it publicly or use it as a production database.

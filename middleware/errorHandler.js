@@ -2,8 +2,16 @@
 // Global error handler — catches all errors thrown in controllers
 
 const errorHandler = (err, req, res, next) => {
-  let statusCode = err.statusCode || 500;
+  let statusCode = err.statusCode || err.status || 500;
   let message = err.message || "Something went wrong on the server";
+  if (err.name === "MulterError") {
+    statusCode = 400;
+    message = "Upload rejected. Check the file size and number of files.";
+  }
+  if (statusCode >= 500) {
+    console.error(err);
+    message = "Something went wrong on the server.";
+  }
 
   // Mongoose: duplicate key (e.g. duplicate horse name/slug)
   if (err.code === 11000) {
