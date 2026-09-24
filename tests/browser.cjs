@@ -42,7 +42,10 @@ const assert = require("node:assert/strict");
       .getByRole("textbox", { name: "Search", exact: true })
       .fill("Atlas");
     await page.getByRole("button", { name: /^Filter/ }).click();
-    await page.locator(".listing .card").first().waitFor();
+    await page.waitForURL(/search=Atlas/);
+    await page.waitForFunction(
+      () => document.querySelectorAll(".listing .card").length === 1,
+    );
     assert.equal(await page.locator(".listing .card").count(), 1);
     await page.goto(base + "/#/admin");
     await page.getByLabel("Password", { exact: true }).fill("Benhaimoud2026!");
