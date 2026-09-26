@@ -133,3 +133,8 @@ Cloud uploads use multipart form fields coverImage (horse/news), images (extra h
 
 Local demo storage is intended for a single running process. Do not expose it publicly or use it as a production database.
 
+
+
+
+
+
