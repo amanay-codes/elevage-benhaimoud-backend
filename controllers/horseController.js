@@ -6,6 +6,9 @@ const { writers, horseFields, discard, error } = require("../utils/content");
 const { escapeRegex } = require("../middleware/validation");
 const horseWriters = writers(Horse, horseFields);
 
+
+
+
 // ─── GET /api/horses ──────────────────────────────────────────────────────────
 // Public: Get all horses (with filtering, sorting, pagination)
 const getAllHorses = async (req, res, next) => {
