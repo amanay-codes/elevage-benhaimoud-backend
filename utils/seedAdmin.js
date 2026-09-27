@@ -9,6 +9,17 @@ const connectDB = require("../config/db");
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 const seedAdmin = async () => {
   await connectDB();
 
