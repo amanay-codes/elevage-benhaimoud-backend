@@ -18,6 +18,21 @@ const ancestorSchema = new mongoose.Schema({
   registrationNumber: { type: String },
 }, { _id: false });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // ─── Main Horse Schema ─────────────────────────────────────────────────────────
 const horseSchema = new mongoose.Schema(
   {

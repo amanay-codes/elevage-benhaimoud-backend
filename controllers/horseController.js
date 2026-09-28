@@ -9,6 +9,8 @@ const horseWriters = writers(Horse, horseFields);
 
 
 
+
+
 // ─── GET /api/horses ──────────────────────────────────────────────────────────
 // Public: Get all horses (with filtering, sorting, pagination)
 const getAllHorses = async (req, res, next) => {

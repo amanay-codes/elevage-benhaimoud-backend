@@ -6,6 +6,8 @@ const { writers, newsFields } = require("../utils/content");
 const { escapeRegex } = require("../middleware/validation");
 const newsWriters = writers(News, newsFields);
 
+
+
 // ─── GET /api/news ────────────────────────────────────────────────────────────
 // Public: Get published news (with pagination & category filter)
 const getAllNews = async (req, res, next) => {

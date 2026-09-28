@@ -1,6 +1,9 @@
 // middleware/errorHandler.js
 // Global error handler — catches all errors thrown in controllers
 
+
+
+
 const errorHandler = (err, req, res, next) => {
   let statusCode = err.statusCode || err.status || 500;
   let message = err.message || "Something went wrong on the server";
