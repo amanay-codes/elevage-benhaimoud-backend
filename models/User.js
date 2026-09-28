@@ -22,6 +22,10 @@ const bcrypt = require("bcryptjs");
 
 
 
+
+
+
+
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -70,3 +74,7 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
 };
 
 module.exports = mongoose.model("User", userSchema);
+
+
+
+
