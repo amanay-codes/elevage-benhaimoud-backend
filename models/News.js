@@ -77,18 +77,6 @@ const newsSchema = new mongoose.Schema(
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 // ─── Auto-generate slug ────────────────────────────────────────────────────────
 newsSchema.pre("save", function (next) {
   if (!this.slug) {
@@ -102,3 +90,11 @@ newsSchema.pre("save", function (next) {
 });
 
 module.exports = mongoose.model("News", newsSchema);
+
+
+
+
+
+
+
+
