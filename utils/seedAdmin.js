@@ -8,20 +8,10 @@ const User = require("../models/User");
 const connectDB = require("../config/db");
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 const seedAdmin = async () => {
   await connectDB();
+
+
 
   const email = process.env.ADMIN_EMAIL;
   const password = process.env.ADMIN_PASSWORD;
@@ -57,3 +47,5 @@ seedAdmin().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+

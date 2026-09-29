@@ -44,6 +44,8 @@ const getGallery = async (req, res, next) => {
 
 
 
+
+
 // ─── POST /api/admin/gallery ──────────────────────────────────────────────────
 // Admin: Upload one or multiple photos/videos
 const uploadMedia = async (req, res, next) => {

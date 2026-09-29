@@ -7,7 +7,14 @@ const User = require("../models/User");
 
 // ─── Helper: Generate JWT token ────────────────────────────────────────────────
 const generateToken = (userId, passwordChangedAt) => {
+
+
+
+
   return jwt.sign(
+
+
+    
     { id: userId, pwdv: passwordChangedAt ? passwordChangedAt.getTime() : 0 },
     process.env.JWT_SECRET,
     {
